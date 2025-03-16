@@ -4,10 +4,11 @@
 }
 
 .col {
-    padding: 10px;
-    background-color: blanchedalmond;
-    height: 600px;
+    padding: 20px;
+    background-color: rgb(213, 223, 255);
+    border-radius: 10px;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
+    row-gap: 10px;
 }

@@ -1,6 +1,6 @@
 
 import style from './App.module.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 import Card from './components/Card'
 
@@ -9,6 +9,9 @@ function App() {
 
   // creo variabile di stato per i politici (cambiano in base alla chiamata fetch)
   const [politici, setPolitici] = useState([]) // array vuoto che si riempirà con risultati chiamata
+
+  // creo variabile di stato per ricerca politico tramite filtro
+  const [searchPol, setSearchPol] = useState('')
 
   // creo variabile per chiamata fetch (raccolgo la response e la stampo in data)
   const fetchPolitici = async () => {
@@ -26,15 +29,31 @@ function App() {
     fetchPolitici()
   }, [])
 
+  // creo filtro con useMemo
+  const filtroPolitici = useMemo(() => {
+    return politici.filter(politico => {
+      const nomePol = politico.name.toLowerCase().includes(searchPol.toLowerCase())
+      const descrizionePol = politico.biography.toLowerCase().includes(searchPol.toLowerCase())
+      return nomePol || descrizionePol
+    })
+  }, [politici, searchPol])
+
   // stampo lista di politici ricevuta da chiamata fetch con map dntro componente Card
   return (
     <>
       <section>
         <div>
           <h1>Lista di Politici</h1>
+          <div>
+            <input
+              type="text"
+              placeholder='Cerca per nome o biografia'
+              value={searchPol}
+              onChange={e => setSearchPol(e.target.value)} />
+          </div>
           <div className={style.container}>
-            {politici &&
-              politici.map((p) => {
+            {
+              filtroPolitici.map((p) => {
                 return <Card key={p.id} data={p} />
               })
             }
